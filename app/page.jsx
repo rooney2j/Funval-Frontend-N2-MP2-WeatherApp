@@ -1,16 +1,31 @@
+'use client'
+
 import Image from "next/image";
 import location from "@/public/images/location.svg"
 import location_on from "@/public/images/location_on.svg"
 import navigation from "@/public/images/navigation.svg"
+import Drawer from "@/components/Drawer";
+import { useState } from "react";
 
 export default function Home() {
+
+  const [drawerOpen, setDrawerOpen] = useState(false)
+
   return (
     <div className="h-lvh w-screen bg-[#1e213a]">
       {/* Geolocalization */}
       <div className="w-full h-screen flex flex-col items-center justify-between">
+        <Drawer
+          drawerOpen={drawerOpen}
+          setDrawerOpen={setDrawerOpen}
+        />
+
         {/* Header */}
-        <div className="w-full h-14 flex justify-between items-center p-4">
-          <button className="bg-gray-400 text-white py-1 px-4 rounded-md">
+        <div className="w-full h-14 flex justify-between items-center pt-7 px-4">
+          <button
+          className="bg-gray-400 text-white py-1 px-4 rounded-md"
+          onClick={ () => setDrawerOpen(true) }
+          >
             Search for Places
           </button>
 
@@ -38,7 +53,7 @@ export default function Home() {
             width={500}
             height={500}
             alt="Una nube solita"
-            className="w-28 h-20 object-cover absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2"
+            className="w-40 h-40 object-contain absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2"
           />
         </div>
 
@@ -105,7 +120,7 @@ export default function Home() {
 
             {/* Card 2 */}
             <div className="w-full h-[200px] bg-[#1e213a] p-6 text-white flex flex-col justify-between items-center">
-              <h3 className="text-base text-center">Tomorrow</h3>
+              <h3 className="text-base text-center">Fri, 25 Oct</h3>
 
               <Image
                 src="/images/01d.png"
@@ -116,14 +131,14 @@ export default function Home() {
               />
 
               <div className=" flex gap-2 mt-2">
-                <p>21°C</p>
-                <p className="text-[#A09FB1]">11°C</p>
+                <p>22°C</p>
+                <p className="text-[#A09FB1]">13°C</p>
               </div>
             </div>
 
             {/* Card 3 */}
             <div className="w-full h-[200px] bg-[#1e213a] p-6 text-white flex flex-col justify-between items-center">
-              <h3 className="text-base text-center">Tomorrow</h3>
+              <h3 className="text-base text-center">Sat, 26 Oct</h3>
 
               <Image
                 src="/images/04n.png"
@@ -134,14 +149,14 @@ export default function Home() {
               />
 
               <div className=" flex gap-2 mt-2">
-                <p>21°C</p>
+                <p>23°C</p>
                 <p className="text-[#A09FB1]">11°C</p>
               </div>
             </div>
 
             {/* Card 4 */}
             <div className="w-full h-[200px] bg-[#1e213a] p-6 text-white flex flex-col justify-between items-center">
-              <h3 className="text-base text-center">Tomorrow</h3>
+              <h3 className="text-base text-center">Sun, 27 Oct</h3>
 
               <Image
                 src="/images/04n.png"
@@ -152,14 +167,14 @@ export default function Home() {
               />
 
               <div className=" flex gap-2 mt-2">
-                <p>21°C</p>
-                <p className="text-[#A09FB1]">11°C</p>
+                <p>23°C</p>
+                <p className="text-[#A09FB1]">13°C</p>
               </div>
             </div>
 
             {/* Card 5 */}
             <div className="w-full h-[200px] bg-[#1e213a] p-6 text-white flex flex-col justify-between items-center">
-              <h3 className="text-base text-center">Tomorrow</h3>
+              <h3 className="text-base text-center">Mon, 28 Oct</h3>
 
               <Image
                 src="/images/04n.png"
@@ -170,8 +185,8 @@ export default function Home() {
               />
 
               <div className=" flex gap-2 mt-2">
-                <p>21°C</p>
-                <p className="text-[#A09FB1]">11°C</p>
+                <p>23°C</p>
+                <p className="text-[#A09FB1]">14°C</p>
               </div>
             </div>
           </div>
