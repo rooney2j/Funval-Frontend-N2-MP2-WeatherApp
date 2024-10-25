@@ -6,7 +6,7 @@ export default function Drawer(props) {
         <>
             {
                 drawerOpen ? (
-                    <div className="z-10 top-0 left-0 m-0 p-0 bg-[#1e213a] absolute w-full h-screen">
+                    <div className="z-10 top-0 left-0 m-0 p-0 bg-[#1e213a] absolute w-full h-full">
                         <div className="w-full px-5 py-2 flex flex-col gap-2 text-white">
                             <button
                                 className="self-end mt-4 mb-3"

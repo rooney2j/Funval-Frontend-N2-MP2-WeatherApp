@@ -17,7 +17,7 @@ export default function Home() {
       {/* Grid (horizontal) */}
       <div className="h-full w-full grid md:grid-cols-[30%_70%]">
         {/* Grid-item 1: Geolocalization */}
-        <div className="w-full h-screen flex flex-col items-center justify-between bg-[#1e213a] relative">
+        <div className="w-full h-screen flex flex-col items-center justify-between bg-[#1e213a] relative overflow-y-auto">
           <Drawer
             drawerOpen={drawerOpen}
             setDrawerOpen={setDrawerOpen}
@@ -32,13 +32,13 @@ export default function Home() {
               Search for Places
             </button>
 
-            <div className="h-8 w-8 bg-gray-600 rounded-full">
+            <button className="h-8 w-8 bg-gray-600 rounded-full">
               <Image
                 src={location}
                 alt="imagen"
                 className="p-1"
               />
-            </div>
+            </button>
           </div>
 
           {/* Clouds */}
@@ -66,7 +66,7 @@ export default function Home() {
             <h3 className="text-[#a09fb1] text-7xl">°C</h3>
           </div>
 
-          <h2 className="text-[#a09fb1] capitalize text-4xl">Overcast clouds</h2>
+          <h2 className="text-[#a09fb1] capitalize text-4xl text-center">Overcast clouds</h2>
 
           {/* Date */}
           <p className="my-4 text-md text-[#88869D] font-medium mb-6">
@@ -88,35 +88,41 @@ export default function Home() {
         {/* End of Grid 1: Geolocalization */}
 
         {/* Grid-item 2: Temperature next 5 days and Today's Highlights (Grid vertical) */}
-        <div className="md:h-screen w-full grid md:grid-rows-[35%_65%] md:px-12 lg:px-24">
-          
+        <div className="md:h-screen w-full grid md:grid-rows-[35%_65%] md:px-4 lg:px-24">
+
           {/* Subgrid item 1: Temperature next 5 days */}
           <div className="w-full h-screen md:h-full bg-black">
             {/* °C and °F options */}
-            <div className="w-full h-[10%] md:h-[15%] py-3 md:py-0 md:pr-8 flex items-end justify-center md:justify-end gap-4">
-              <button className="w-10 h-10 md:w-8 md:h-full bg-slate-200 font-medium p-2 md:p-1 rounded-full">
-                <span className="text-base">°C</span>
-              </button>
+            <div className="w-full h-[10%] md:h-[20%] py-3 md:py-0 md:pr-1 flex items-end justify-center md:justify-end gap-4">
+              <div className="w-10 h-10 md:w-11 md:h-11">
+                <button className="w-full h-full bg-slate-200 font-medium p-2 md:p-1 rounded-full">
+                  <span className="text-xl font-bold">°C</span>
+                </button>
+              </div>
 
-              <button className="w-10 h-10 md:w-8 md:h-full bg-slate-400 font-medium p-2 md:p-1 rounded-full">
-                <span className="text-base text-white">°F</span>
+              <div className="w-10 h-10 md:w-11 md:h-11">
+              <button className="w-full h-full bg-slate-400 font-medium p-2 md:p-1 rounded-full">
+                <span className="text-xl text-white font-bold">°F</span>
               </button>
+              </div>
             </div>
 
             {/* Cards */}
-            <div className="h-[90%] md:h-[85%] w-full p-3 md:p-0">
-              <div className="h-full w-full p-3 md:p-0 grid grid-cols-2 md:grid-cols-5 gap-5 md:gap-2">
+            <div className="h-[90%] md:h-[80%] w-full p-3 md:px-0 md:py-2">
+              <div className="h-full w-full p-3 md:p-0 grid grid-cols-2 grid-rows-3 md:grid-cols-5 md:grid-rows-1 gap-5 md:gap-3">
                 {/* Card 1 */}
-                <div className="w-full h-[200px] md:h-full bg-[#1e213a] p-6 text-white flex flex-col justify-between items-center">
+                <div className="w-full h-full bg-[#1e213a] p-6 md:p-4 text-white flex flex-col justify-between items-center overflow-y-auto overflow-x-hidden">
                   <h3 className="text-base text-center">Tomorrow</h3>
 
-                  <Image
-                    src="/images/04n.png"
-                    width={500}
-                    height={500}
-                    alt="Una nube solita"
-                    className="w-24 h-24 object-contain"
-                  />
+                  <div className="w-24 h-24 md:w-14 md:h-14">
+                    <Image
+                      src="/images/04n.png"
+                      width={500}
+                      height={500}
+                      alt="Una nube solita"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
 
                   <div className=" flex gap-2 mt-2">
                     <p>21°C</p>
@@ -125,16 +131,18 @@ export default function Home() {
                 </div>
 
                 {/* Card 2 */}
-                <div className="w-full h-[200px] bg-[#1e213a] p-6 text-white flex flex-col justify-between items-center">
+                <div className="w-full h-full bg-[#1e213a] p-6 md:p-4 text-white flex flex-col justify-between items-center overflow-y-auto overflow-x-hidden">
                   <h3 className="text-base text-center">Fri, 25 Oct</h3>
 
-                  <Image
-                    src="/images/01d.png"
-                    width={500}
-                    height={500}
-                    alt="Sol"
-                    className="w-24 h-24 object-contain"
-                  />
+                  <div className="w-24 h-24 md:w-14 md:h-14 flex items-center justify-center">
+                    <Image
+                      src="/images/01d.png"
+                      width={500}
+                      height={500}
+                      alt="Sol"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
 
                   <div className=" flex gap-2 mt-2">
                     <p>22°C</p>
@@ -143,16 +151,18 @@ export default function Home() {
                 </div>
 
                 {/* Card 3 */}
-                <div className="w-full h-[200px] bg-[#1e213a] p-6 text-white flex flex-col justify-between items-center">
+                <div className="w-full h-full bg-[#1e213a] p-6 md:p-4 text-white flex flex-col justify-between items-center overflow-y-auto overflow-x-hidden">
                   <h3 className="text-base text-center">Sat, 26 Oct</h3>
 
-                  <Image
-                    src="/images/04n.png"
-                    width={500}
-                    height={500}
-                    alt="Una nube solita"
-                    className="w-24 h-24 object-contain"
-                  />
+                  <div className="w-24 h-24 md:w-14 md:h-14">
+                    <Image
+                      src="/images/04n.png"
+                      width={500}
+                      height={500}
+                      alt="Una nube solita"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
 
                   <div className=" flex gap-2 mt-2">
                     <p>23°C</p>
@@ -161,16 +171,18 @@ export default function Home() {
                 </div>
 
                 {/* Card 4 */}
-                <div className="w-full h-[200px] bg-[#1e213a] p-6 text-white flex flex-col justify-between items-center">
+                <div className="w-full h-full bg-[#1e213a] p-6 md:p-4 text-white flex flex-col justify-between items-center overflow-y-auto overflow-x-hidden">
                   <h3 className="text-base text-center">Sun, 27 Oct</h3>
 
-                  <Image
-                    src="/images/04n.png"
-                    width={500}
-                    height={500}
-                    alt="Una nube solita"
-                    className="w-24 h-24 object-contain"
-                  />
+                  <div className="w-24 h-24 md:w-14 md:h-14">
+                    <Image
+                      src="/images/04n.png"
+                      width={500}
+                      height={500}
+                      alt="Una nube solita"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
 
                   <div className=" flex gap-2 mt-2">
                     <p>23°C</p>
@@ -179,16 +191,18 @@ export default function Home() {
                 </div>
 
                 {/* Card 5 */}
-                <div className="w-full h-[200px] bg-[#1e213a] p-6 text-white flex flex-col justify-between items-center">
+                <div className="w-full h-full bg-[#1e213a] p-6 md:p-4 text-white flex flex-col justify-between items-center overflow-y-auto overflow-x-hidden">
                   <h3 className="text-base text-center">Mon, 28 Oct</h3>
 
-                  <Image
-                    src="/images/04n.png"
-                    width={500}
-                    height={500}
-                    alt="Una nube solita"
-                    className="w-24 h-24 object-contain"
-                  />
+                  <div className="w-24 h-24 md:w-14 md:h-14">
+                    <Image
+                      src="/images/04n.png"
+                      width={500}
+                      height={500}
+                      alt="Una nube solita"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
 
                   <div className=" flex gap-2 mt-2">
                     <p>23°C</p>
@@ -201,13 +215,13 @@ export default function Home() {
           </div>
 
           {/* Subgrid item 2: Today's Highlights */}
-          <div className="h-screen md:h-full w-full bg-black md:pt-5">
-            <h2 className="text-2xl text-white text-center md:text-start p-2 md:p-0">Today&apos;s Highlights</h2>
+          <div className="h-screen md:h-full w-full bg-black md:pt-3">
+            <h2 className="h-[8%] text-2xl text-white text-center md:text-start p-2 md:p-0">Today&apos;s Highlights</h2>
 
-            <div className="h-[92%] w-full">
-              <div className="w-full h-full grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-3 px-6 md:px-0">
+            <div className="h-[92%] w-full md:pt-2">
+              <div className="w-full h-full grid grid-rows-4 md:grid-cols-2 md:grid-rows-2 gap-3 pb-6 md:pb-0 px-6 md:px-0">
                 {/* Wind status */}
-                <div className="h-[160px] md:h-full w-full flex flex-col items-center justify-between p-4 bg-[#1e213a] text-[#e7e7eb]">
+                <div className="h-full md:h-full w-full flex flex-col items-center justify-between p-4 bg-[#1e213a] text-[#e7e7eb] overflow-y-auto">
                   <h3 className="text-medium text-base text-center text-[#e7e7eb]">Wind status</h3>
 
                   <div className="flex">
@@ -229,7 +243,7 @@ export default function Home() {
                 </div>
 
                 {/* Humidity */}
-                <div className="h-[160px] md:h-full w-full flex flex-col items-center justify-between p-4 bg-[#1e213a] text-[#e7e7eb]">
+                <div className="h-full md:h-full w-full flex flex-col items-center justify-between p-4 bg-[#1e213a] text-[#e7e7eb] overflow-y-auto">
                   <h3 className="text-medium text-base text-center text-[#e7e7eb]">Humidity</h3>
 
                   <div className="flex">
@@ -254,7 +268,7 @@ export default function Home() {
                 </div>
 
                 {/* Visibility */}
-                <div className="h-[150px] md:h-full w-full flex flex-col items-center p-4 bg-[#1e213a] text-[#e7e7eb]">
+                <div className="h-full md:h-full w-full flex flex-col items-center p-4 bg-[#1e213a] text-[#e7e7eb] overflow-y-auto">
                   <h3 className="text-medium text-base text-center text-[#e7e7eb]">Visibility</h3>
 
                   <div className="flex items-center pt-3">
@@ -264,7 +278,7 @@ export default function Home() {
                 </div>
 
                 {/* Air Pressure */}
-                <div className="h-[150px] md:h-full w-full flex flex-col items-center p-4 bg-[#1e213a] text-[#e7e7eb]">
+                <div className="h-full md:h-full w-full flex flex-col items-center p-4 bg-[#1e213a] text-[#e7e7eb] overflow-y-auto">
                   <h3 className="text-medium text-base text-center text-[#e7e7eb]">Air Pressure</h3>
 
                   <div className="flex items-center pt-3">
