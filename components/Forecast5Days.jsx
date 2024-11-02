@@ -5,8 +5,12 @@ import Image from "next/image"
 import axios from "axios";
 
 import { API_KEY } from "@/utils/key";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import dayjs from "dayjs";
+import { CityContext } from "@/context/CityContext";
+
+import { convertirCelsiusAFahrenheit } from "./TemperatureOptions";
+import { IsFahrenheitContext } from "@/context/IsFahrenheitContext";
 
 const fetchDataOfFiveDays = async (city = 'Buenos Aires') => {
     const { data } = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric`);
@@ -22,7 +26,17 @@ export default function Forecast5Days(props) {
     const dentro_de_4_dias = fecha_de_hoy.add(4, 'day');
     const dentro_de_5_dias = fecha_de_hoy.add(5, 'day');
 
-    const [currentCity, setCurrentCity] = useState('Arequipa')
+    // Usando la variable del contexto
+    const { cityName } = useContext(CityContext)
+
+    // Usando la variable de contexto para el cambio de temperatura
+    const { isFahrenheit } = useContext(IsFahrenheitContext)
+
+    const [arrPrediccionesManana, setArrPrediccionesManana] = useState([])
+    const [arrPrediccionesPasadoManana, setArrPrediccionesPasadoManana] = useState([])
+    const [arrPrediccionesEn3Dias, setArrPrediccionesEn3Dias] = useState([])
+    const [arrPrediccionesEn4Dias, setArrPrediccionesEn4Dias] = useState([])
+    const [arrPrediccionesEn5Dias, setArrPrediccionesEn5Dias] = useState([])
 
     const [weatherToday, setWeatherToday] = useState({});
     const [weatherTomorrow, setWeatherTomorrow] = useState({});
@@ -32,44 +46,80 @@ export default function Forecast5Days(props) {
     const [weatherIn5Days, setWeatherIn5Days] = useState({});
 
     useEffect(() => {
-        fetchDataOfFiveDays(currentCity)
+        fetchDataOfFiveDays(cityName)
             .then((data) => {
                 const weather_list = data.list;
 
                 // Devuelve el objeto completo si coincide con la fecha de mañana
-                const objeto_manana = weather_list.find((objeto) => {
+                const arreglo_predicciones_manana = weather_list.filter((objeto) => {
                     const objeto_fecha = dayjs(objeto.dt_txt)
 
                     return manana.date() === objeto_fecha.date() && manana.month() === objeto_fecha.month() && manana.year() === objeto_fecha.year()
                 })
 
+                const objeto_manana = arreglo_predicciones_manana.find((objeto) => {
+                    const objeto_fecha = dayjs(objeto.dt_txt)
+
+                    return manana.date() === objeto_fecha.date() && manana.month() === objeto_fecha.month() && manana.year() === objeto_fecha.year() && objeto_fecha.hour() === 12
+                })
+
                 // Devuelve el objeto completo si coincide con la fecha de pasado mañana
-                const objeto_pasado_manana = weather_list.find((objeto) => {
+                const arreglo_predicciones_pasado_manana = weather_list.filter((objeto) => {
                     const objeto_fecha = dayjs(objeto.dt_txt)
 
                     return pasado_manana.date() === objeto_fecha.date() && pasado_manana.month() === objeto_fecha.month() && pasado_manana.year() === objeto_fecha.year()
                 })
 
+                const objeto_pasado_manana = arreglo_predicciones_pasado_manana.find((objeto) => {
+                    const objeto_fecha = dayjs(objeto.dt_txt)
+
+                    return pasado_manana.date() === objeto_fecha.date() && pasado_manana.month() === objeto_fecha.month() && pasado_manana.year() === objeto_fecha.year() && objeto_fecha.hour() === 12
+                })
+
                 // Devuelve el objeto completo si coincide con la fecha dentro de 3 días
-                const objeto_dentro_de_3_dias = weather_list.find((objeto) => {
+                const arreglo_predicciones_en_3_dias = weather_list.filter((objeto) => {
                     const objeto_fecha = dayjs(objeto.dt_txt)
 
                     return dentro_de_3_dias.date() === objeto_fecha.date() && dentro_de_3_dias.month() === objeto_fecha.month() && dentro_de_3_dias.year() === objeto_fecha.year()
                 })
 
+                const objeto_dentro_de_3_dias = arreglo_predicciones_en_3_dias.find((objeto) => {
+                    const objeto_fecha = dayjs(objeto.dt_txt)
+
+                    return dentro_de_3_dias.date() === objeto_fecha.date() && dentro_de_3_dias.month() === objeto_fecha.month() && dentro_de_3_dias.year() === objeto_fecha.year() && objeto_fecha.hour() === 12
+                })
+
                 // Devuelve el objeto completo si coincide con la fecha dentro de 4 días
-                const objeto_dentro_de_4_dias = weather_list.find((objeto) => {
+                const arreglo_predicciones_en_4_dias = weather_list.filter((objeto) => {
                     const objeto_fecha = dayjs(objeto.dt_txt)
 
                     return dentro_de_4_dias.date() === objeto_fecha.date() && dentro_de_4_dias.month() === objeto_fecha.month() && dentro_de_4_dias.year() === objeto_fecha.year()
                 })
 
-                // Devuelve el objeto completo si coincide con la fecha dentro de 4 días
-                const objeto_dentro_de_5_dias = weather_list.find((objeto) => {
+                const objeto_dentro_de_4_dias = arreglo_predicciones_en_4_dias.find((objeto) => {
+                    const objeto_fecha = dayjs(objeto.dt_txt)
+
+                    return dentro_de_4_dias.date() === objeto_fecha.date() && dentro_de_4_dias.month() === objeto_fecha.month() && dentro_de_4_dias.year() === objeto_fecha.year() && objeto_fecha.hour() === 12
+                })
+
+                // Devuelve el objeto completo si coincide con la fecha dentro de 5 días
+                const arreglo_predicciones_en_5_dias = weather_list.filter((objeto) => {
                     const objeto_fecha = dayjs(objeto.dt_txt)
 
                     return dentro_de_5_dias.date() === objeto_fecha.date() && dentro_de_5_dias.month() === objeto_fecha.month() && dentro_de_5_dias.year() === objeto_fecha.year()
                 })
+
+                const objeto_dentro_de_5_dias = arreglo_predicciones_en_5_dias.find((objeto) => {
+                    const objeto_fecha = dayjs(objeto.dt_txt)
+
+                    return dentro_de_5_dias.date() === objeto_fecha.date() && dentro_de_5_dias.month() === objeto_fecha.month() && dentro_de_5_dias.year() === objeto_fecha.year()
+                })
+
+                setArrPrediccionesManana(arreglo_predicciones_manana);
+                setArrPrediccionesPasadoManana(arreglo_predicciones_pasado_manana);
+                setArrPrediccionesEn3Dias(arreglo_predicciones_en_3_dias);
+                setArrPrediccionesEn4Dias(arreglo_predicciones_en_4_dias);
+                setArrPrediccionesEn5Dias(arreglo_predicciones_en_5_dias);
 
                 // Validamos que los datos hayan sido entregados
                 if (objeto_manana && objeto_pasado_manana && objeto_dentro_de_3_dias && objeto_dentro_de_4_dias && objeto_dentro_de_5_dias) {
@@ -80,7 +130,27 @@ export default function Forecast5Days(props) {
                     setWeatherIn5Days(objeto_dentro_de_5_dias);
                 }
             })
-    }, [])
+    }, [cityName])
+
+    function tempMaxYMin(arr) {
+        let temperatura_mayor = -10000
+        let temperatura_menor = 10000
+
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i].main.temp_max > temperatura_mayor) {
+                temperatura_mayor = arr[i].main.temp_max;
+            }
+
+            if (arr[i].main.temp_min < temperatura_menor) {
+                temperatura_menor = arr[i].main.temp_max;
+            }
+        }
+
+        return {
+            temperatura_maxima: temperatura_mayor,
+            temperatura_minima: temperatura_menor
+        }
+    }
 
     return (
         <div className="h-[90%] md:h-[80%] w-full p-3 md:px-0 md:py-2">
@@ -99,11 +169,19 @@ export default function Forecast5Days(props) {
                         />
                     </div>
 
-                    <div className=" flex gap-2 mt-2">
-                        {/* <p>{`${convertirFahrenheitACelsius(weatherTomorrow?.main?.temp_max)}`}°C</p> */}
-                        <p>{weatherTomorrow?.main?.temp_max.toFixed(0)}°C</p>
-                        <p className="text-[#A09FB1]">{weatherTomorrow?.main?.temp_min.toFixed(0)}°C</p>
-                    </div>
+                    {
+                        isFahrenheit ? (
+                            <div className=" flex gap-2 mt-2">
+                                <p>{`${parseFloat(convertirCelsiusAFahrenheit(tempMaxYMin(arrPrediccionesManana).temperatura_maxima)).toFixed(0)}`}°F</p>
+                                <p className="text-[#A09FB1]">{`${parseFloat(convertirCelsiusAFahrenheit(tempMaxYMin(arrPrediccionesManana).temperatura_minima)).toFixed(0)}`}°F</p>
+                            </div>
+                        ) : (
+                            <div className=" flex gap-2 mt-2">
+                                <p>{tempMaxYMin(arrPrediccionesManana).temperatura_maxima.toFixed(0)}°C</p>
+                                <p className="text-[#A09FB1]">{tempMaxYMin(arrPrediccionesManana).temperatura_minima.toFixed(0)}°C</p>
+                            </div>
+                        )
+                    }
                 </div>
 
                 {/* Card 2 */}
@@ -120,10 +198,19 @@ export default function Forecast5Days(props) {
                         />
                     </div>
 
-                    <div className=" flex gap-2 mt-2">
-                        <p>{weatherIn2Days?.main?.temp_max.toFixed(0)}°C</p>
-                        <p className="text-[#A09FB1]">{weatherIn2Days?.main?.temp_min.toFixed(0)}°C</p>
-                    </div>
+                    {
+                        isFahrenheit ? (
+                            <div className=" flex gap-2 mt-2">
+                                <p>{`${parseFloat(convertirCelsiusAFahrenheit(tempMaxYMin(arrPrediccionesPasadoManana).temperatura_maxima)).toFixed(0)}`}°F</p>
+                                <p className="text-[#A09FB1]">{`${parseFloat(convertirCelsiusAFahrenheit(tempMaxYMin(arrPrediccionesPasadoManana).temperatura_minima)).toFixed(0)}`}°F</p>
+                            </div>
+                        ) : (
+                            <div className=" flex gap-2 mt-2">
+                                <p>{tempMaxYMin(arrPrediccionesPasadoManana).temperatura_maxima.toFixed(0)}°C</p>
+                                <p className="text-[#A09FB1]">{tempMaxYMin(arrPrediccionesPasadoManana).temperatura_minima.toFixed(0)}°C</p>
+                            </div>
+                        )
+                    }
                 </div>
 
                 {/* Card 3 */}
@@ -140,10 +227,19 @@ export default function Forecast5Days(props) {
                         />
                     </div>
 
-                    <div className=" flex gap-2 mt-2">
-                        <p>{weatherIn3Days?.main?.temp_max.toFixed(0)}°C</p>
-                        <p className="text-[#A09FB1]">{weatherIn3Days?.main?.temp_min.toFixed(0)}°C</p>
-                    </div>
+                    {
+                        isFahrenheit ? (
+                            <div className=" flex gap-2 mt-2">
+                                <p>{`${parseFloat(convertirCelsiusAFahrenheit(tempMaxYMin(arrPrediccionesEn3Dias).temperatura_maxima)).toFixed(0)}`}°F</p>
+                                <p className="text-[#A09FB1]">{`${parseFloat(convertirCelsiusAFahrenheit(tempMaxYMin(arrPrediccionesEn3Dias).temperatura_minima)).toFixed(0)}`}°F</p>
+                            </div>
+                        ) : (
+                            <div className=" flex gap-2 mt-2">
+                                <p>{tempMaxYMin(arrPrediccionesEn3Dias).temperatura_maxima.toFixed(0)}°C</p>
+                                <p className="text-[#A09FB1]">{tempMaxYMin(arrPrediccionesEn3Dias).temperatura_minima.toFixed(0)}°C</p>
+                            </div>
+                        )
+                    }
                 </div>
 
                 {/* Card 4 */}
@@ -160,10 +256,19 @@ export default function Forecast5Days(props) {
                         />
                     </div>
 
-                    <div className=" flex gap-2 mt-2">
-                        <p>{weatherIn4Days?.main?.temp_max.toFixed(0)}°C</p>
-                        <p className="text-[#A09FB1]">{weatherIn4Days?.main?.temp_min.toFixed(0)}°C</p>
-                    </div>
+                    {
+                        isFahrenheit ? (
+                            <div className=" flex gap-2 mt-2">
+                                <p>{`${parseFloat(convertirCelsiusAFahrenheit(tempMaxYMin(arrPrediccionesEn4Dias).temperatura_maxima)).toFixed(0)}`}°F</p>
+                                <p className="text-[#A09FB1]">{`${parseFloat(convertirCelsiusAFahrenheit(tempMaxYMin(arrPrediccionesEn4Dias).temperatura_minima)).toFixed(0)}`}°F</p>
+                            </div>
+                        ) : (
+                            <div className=" flex gap-2 mt-2">
+                                <p>{tempMaxYMin(arrPrediccionesEn4Dias).temperatura_maxima.toFixed(0)}°C</p>
+                                <p className="text-[#A09FB1]">{tempMaxYMin(arrPrediccionesEn4Dias).temperatura_minima.toFixed(0)}°C</p>
+                            </div>
+                        )
+                    }
                 </div>
 
                 {/* Card 5 */}
@@ -180,10 +285,19 @@ export default function Forecast5Days(props) {
                         />
                     </div>
 
-                    <div className=" flex gap-2 mt-2">
-                        <p>{weatherIn5Days?.main?.temp_max.toFixed(0)}°C</p>
-                        <p className="text-[#A09FB1]">{weatherIn5Days?.main?.temp_min.toFixed(0)}°C</p>
-                    </div>
+                    {
+                        isFahrenheit ? (
+                            <div className=" flex gap-2 mt-2">
+                                <p>{`${parseFloat(convertirCelsiusAFahrenheit(tempMaxYMin(arrPrediccionesEn5Dias).temperatura_maxima)).toFixed(0)}`}°F</p>
+                                <p className="text-[#A09FB1]">{`${parseFloat(convertirCelsiusAFahrenheit(tempMaxYMin(arrPrediccionesEn5Dias).temperatura_minima)).toFixed(0)}`}°F</p>
+                            </div>
+                        ) : (
+                            <div className=" flex gap-2 mt-2">
+                                <p>{tempMaxYMin(arrPrediccionesEn5Dias).temperatura_maxima.toFixed(0)}°C</p>
+                                <p className="text-[#A09FB1]">{tempMaxYMin(arrPrediccionesEn5Dias).temperatura_minima.toFixed(0)}°C</p>
+                            </div>
+                        )
+                    }
                 </div>
             </div>
         </div>

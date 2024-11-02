@@ -10,13 +10,19 @@ import getGeolocation from "@/utils/getGeolocation";
 import Drawer from "./Drawer"
 
 import axios from "axios";
+import dayjs from "dayjs";
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 
 import { API_KEY } from "@/utils/key"
+import { CityContext } from "@/context/CityContext";
+import { IsFahrenheitContext } from "@/context/IsFahrenheitContext";
+
+import { convertirCelsiusAFahrenheit } from "./TemperatureOptions";
+
 
 const fetchDataOfACity = async (city = 'Buenos Aires') => {
-    const { data } = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`);
+    const { data } = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`);
 
     return data;
 }
@@ -33,33 +39,39 @@ const fetchDataOfOneLocation = async (latitud = 44.34, longitud = 10.99) => {
     return data;
 }
 
-/* function handleClickGeolocation() {
-    fetchCoordinates()
-        .then((data) => {
-            let mi_latitud = data.latitud;
-            let mi_longitud = data.longitud;
+export default function GeolocationPanel() {
+    const fecha_de_hoy = dayjs()
 
-            fetchDataOfOneLocation(mi_latitud, mi_longitud)
-                .then((data) => {
-                    setCurrentCity(data);
-                })
-        });
-}
- */
-
-export default function GeolocationPanel(props) {
-    // State para mostrar el panel con las opciones para seleccionar una ciudad
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const [currentCity, setCurrentCity] = useState('Arequipa');
+
+    // Usando las variables del contexto para obtener y actualizar el nombre de la ciudad
+    const { cityName, setCityName } = useContext(CityContext);
+
+    // Usando las variables del contexto Fahrenheit para mostrar la temperatura
+    const { isFahrenheit } = useContext(IsFahrenheitContext);
+
     const [currentCityWeather, setCurrentCityWeather] = useState({});
 
     useEffect(() => {
-        fetchDataOfACity(currentCity)
+        fetchDataOfACity(cityName)
             .then((data) => {
-                console.log(data);
+                //console.log(data);
                 setCurrentCityWeather(data);
             })
-    }, [currentCity])
+    }, [cityName])
+
+    function handleClickGeolocation() {
+        fetchCoordinates()
+            .then((data) => {
+                let mi_latitud = data.latitud;
+                let mi_longitud = data.longitud;
+
+                fetchDataOfOneLocation(mi_latitud, mi_longitud)
+                    .then((data) => {
+                        setCityName(data.name);
+                    })
+            });
+    }
 
     return (
         <div className="w-full h-screen flex flex-col items-center justify-between bg-[#1e213a] relative overflow-y-auto">
@@ -77,7 +89,10 @@ export default function GeolocationPanel(props) {
                     Search for Places
                 </button>
 
-                <button className="h-8 w-8 bg-gray-600 rounded-full">
+                <button
+                    className="h-8 w-8 bg-gray-600 rounded-full"
+                    onClick={handleClickGeolocation}
+                >
                     <Image
                         src={location}
                         alt="imagen"
@@ -97,7 +112,7 @@ export default function GeolocationPanel(props) {
                 />
 
                 <Image
-                    src="/images/04n.png"
+                    src={currentCityWeather.weather ? `/images/${currentCityWeather.weather[0].icon}.png` : '/images/04n.png'}
                     width={500}
                     height={500}
                     alt="Una nube solita"
@@ -107,15 +122,28 @@ export default function GeolocationPanel(props) {
 
             {/* Temperature */}
             <div className="flex items-center gap-1 my-4">
-                <h2 className="text-[#e7e7eb] text-9xl font-medium">14</h2>
-                <h3 className="text-[#a09fb1] text-7xl">°C</h3>
+                <h2 className="text-[#e7e7eb] text-9xl font-medium">
+                    {
+                        isFahrenheit ? 
+                            `${parseFloat(convertirCelsiusAFahrenheit(currentCityWeather?.main?.temp)).toFixed(0)}`
+                         :
+                            `${currentCityWeather?.main?.temp.toFixed(0)}`
+                    }
+
+                </h2>
+
+                <h3 className="text-[#a09fb1] text-7xl">
+                    {
+                        isFahrenheit ? '°F' : '°C'
+                    }
+                </h3>
             </div>
 
-            <h2 className="text-[#a09fb1] capitalize text-4xl text-center">Overcast clouds</h2>
+            <h2 className="text-[#a09fb1] capitalize text-4xl text-center">{currentCityWeather.weather ? currentCityWeather.weather[0].description : 'None'}</h2>
 
             {/* Date */}
             <p className="my-4 text-md text-[#88869D] font-medium mb-6">
-                Today &nbsp;&nbsp; . &nbsp;&nbsp; Wed, 23 Oct
+                Today &nbsp;&nbsp; . &nbsp;&nbsp; {fecha_de_hoy.format('ddd, D MMM')}
             </p>
 
             {/* Location */}
@@ -127,7 +155,7 @@ export default function GeolocationPanel(props) {
                     />
                 </div>
 
-                <span className="text-[#a09fb1] text-xs">Arequipa</span>
+                <span className="text-[#a09fb1] text-xs">{cityName}</span>
             </div>
         </div>
     )

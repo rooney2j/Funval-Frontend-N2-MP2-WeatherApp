@@ -5,9 +5,10 @@ import Image from "next/image"
 import navigation from "@/public/images/navigation.svg"
 
 import { API_KEY } from "@/utils/key"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 
 import axios from "axios"
+import { CityContext } from "@/context/CityContext"
 
 const fetchDataOfACity = async (city = 'Buenos Aires') => {
     const { data } = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`);
@@ -16,18 +17,17 @@ const fetchDataOfACity = async (city = 'Buenos Aires') => {
 }
 
 export default function TodayHighlights(props) {
-    /* let currentCity = props.currentCity
-    let visibilityKm = props.visibilityKm */
+    // Usando la variable del contexto
+    const {cityName} = useContext(CityContext)
 
-    const [currentCity, setCurrentCity] = useState('Arequipa')
     const [currentCityWeather, setCurrentCityWeather] = useState({})
 
     useEffect( () => {
-        fetchDataOfACity(currentCity)
+        fetchDataOfACity(cityName)
         .then( (data) => {
             setCurrentCityWeather(data);
         } )
-    }, [currentCity] )
+    }, [cityName] )
 
     return (
         <div className="h-screen md:h-full w-full bg-black md:pt-3">
@@ -88,7 +88,7 @@ export default function TodayHighlights(props) {
                         <h3 className="text-medium text-base text-center text-[#e7e7eb]">Visibility</h3>
 
                         <div className="flex items-center pt-3">
-                            <p className="text-6xl font-bold">{currentCityWeather?.visibility ? currentCityWeather.visibility/1000 : 0}</p>
+                            <p className="text-6xl font-bold">{currentCityWeather?.visibility ? (currentCityWeather.visibility/1000).toFixed(2) : 0}</p>
                             <p className="text-4xl ml-1 font-light">km</p>
                         </div>
                     </div>
