@@ -3,17 +3,6 @@ const coordenadas_por_defecto = {
     longitud: 10.99
 };
 
-function success(position) {
-    mis_coordenadas.latitud = position.coords.latitude;
-    mis_coordenadas.longitud = position.coords.longitude;
-
-    //console.log(mis_coordenadas);
-}
-
-function error() {
-    alert("Sorry, no position available.");
-}
-
 const options = {
     enableHighAccuracy: true,
     maximumAge: 30000,
